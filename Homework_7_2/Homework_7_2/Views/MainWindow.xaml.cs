@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Homework_7_2
+namespace Homework_7_2.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
