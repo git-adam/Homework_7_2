@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls;
+﻿using Homework_7_2.ViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,12 @@ namespace Homework_7_2.Views
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : MetroWindow
+    public partial class LogOnView : MetroWindow
     {
-        public LoginView()
+        public LogOnView(bool canCloseWindow)
         {
             InitializeComponent();
+            DataContext = new LogOnViewModel(canCloseWindow);
         }
     }
 }

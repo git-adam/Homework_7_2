@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LoginView.xaml">
+    <Page Include="Views\LogOnView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -102,11 +102,14 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Models\Converters\LogOnParamsConverter.cs" />
+    <Compile Include="Models\LogOnParams.cs" />
+    <Compile Include="Models\UserCredentials.cs" />
     <Compile Include="Models\Wrappers\EmployeeWrapper.cs" />
     <Compile Include="Models\Wrappers\StatusWrapper.cs" />
     <Compile Include="ViewModels\AddEditEmployeeViewModel.cs" />
     <Compile Include="ViewModels\ConnectionSettingsViewModel.cs" />
-    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\LogOnViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AddEditEmployeeView.xaml.cs">
@@ -115,8 +118,8 @@
     <Compile Include="Views\ConnectionSettingsView.xaml.cs">
       <DependentUpon>ConnectionSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
+    <Compile Include="Views\LogOnView.xaml.cs">
+      <DependentUpon>LogOnView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -1,0 +1,66 @@
+﻿<mah:MetroWindow  x:Class="Homework_7_2.Views.LogOnView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:converters="clr-namespace:Homework_7_2.Models.Converters"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:local="clr-namespace:Homework_7_2.Views"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Name="LogOnWindow"
+        ResizeMode="NoResize"
+        Title="Logowanie" Height="210" Width="300">
+        
+    
+    <mah:MetroWindow.Resources>
+        <converters:LogOnParamsConverter x:Key="logOnParamsConverter" />
+    </mah:MetroWindow.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding ClosedWindowCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Podaj dane, aby się zalogować!" HorizontalAlignment="Center" Margin="5" Grid.ColumnSpan="2"/>
+
+        <Label Content="Login" VerticalAlignment="Center" Grid.Row="1" Margin="5"/>
+        <TextBox Text="{Binding UserCredentials.Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <Label Content="Hasło" VerticalAlignment="Center" Grid.Row="2" Margin="5"/>
+        <PasswordBox Name="PasswordBox" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=LogOnWindow}" Content="Anuluj" Height="45" Width="100" Margin="5"/>
+            <Button 
+                Command="{Binding ConfirmCommand}"
+                Content="Zatwierdź"
+                Height="45"
+                Width="100"
+                Margin="5">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource logOnParamsConverter}">
+                        <Binding ElementName="LogOnWindow" />
+                        <Binding ElementName="PasswordBox" />
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+
+        </StackPanel>
+
+    </Grid>
+</mah:MetroWindow>

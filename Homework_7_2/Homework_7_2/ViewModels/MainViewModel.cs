@@ -1,5 +1,8 @@
 ﻿using Homework_7_2.Commands;
 using Homework_7_2.Models.Wrappers;
+using Homework_7_2.Views;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,18 +27,12 @@ namespace Homework_7_2.ViewModels
             LogOnCommand = new RelayCommand(LogOn);
             LoadedWindowCommand = new RelayCommand(LoadedWindow);
 
+            //LoadedWindow(null);
+            var logOnWindow = new LogOnView(false);
+            logOnWindow.ShowDialog();
 
-
-            //
-            Employees = new ObservableCollection<EmployeeWrapper>()
-            {
-                new EmployeeWrapper() {FirstName = "A", Bonus = true},
-                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1, Name = "Na urlopie"} },
-                new EmployeeWrapper() {FirstName = "C"},
-            };
-
-            InitStatus();
-
+            InitEmployees();
+            InitStatuses();
         }
 
         public ICommand AddEmployeeCommand { get; set; }
@@ -117,14 +114,31 @@ namespace Homework_7_2.ViewModels
         }
         private void LogOn(object obj)
         {
-            MessageBox.Show("Zaloguj");
-        }
-        private void LoadedWindow(object obj)
-        {
-            MessageBox.Show("Wczytaj okno");
+            var logOnWindow = new LogOnView(true); //Nie jest to dobra praktyka, stosuje się mechanizm DEPENDENCY INJECTION
+            logOnWindow.Closed += LogOnWindow_Closed;
+            logOnWindow.ShowDialog();
         }
 
-        private void InitStatus()
+        private void LogOnWindow_Closed(object sender, EventArgs e)
+        {
+            MessageBox.Show("Zaloguj");
+        }
+
+        private void LoadedWindow(object obj)
+        {
+        }
+
+        private void InitEmployees()
+        {
+            Employees = new ObservableCollection<EmployeeWrapper>()
+            {
+                new EmployeeWrapper() {FirstName = "A", Bonus = true},
+                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1, Name = "Na urlopie"} },
+                new EmployeeWrapper() {FirstName = "C"},
+            };
+        }
+
+        private void InitStatuses()
         {
             Status = new ObservableCollection<StatusWrapper>()
             {
