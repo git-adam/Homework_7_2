@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls;
+﻿using Homework_7_2.ViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,10 @@ namespace Homework_7_2.Views
     /// </summary>
     public partial class ConnectionSettingsView : MetroWindow
     {
-        public ConnectionSettingsView()
+        public ConnectionSettingsView(bool canCloseWindow)
         {
             InitializeComponent();
+            DataContext = new ConnectionSettingsViewModel(canCloseWindow);
         }
     }
 }

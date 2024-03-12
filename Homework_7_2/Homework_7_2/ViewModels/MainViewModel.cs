@@ -6,6 +6,7 @@ using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,21 +19,17 @@ namespace Homework_7_2.ViewModels
     {
         public MainViewModel()
         {
-
             AddEmployeeCommand = new RelayCommand(AddEditEmployee);
             EditEmployeeCommand = new RelayCommand(AddEditEmployee, CanEditDismissEmployee);
-            DismissEmployeeCommand = new RelayCommand(DismissEmployee, CanEditDismissEmployee);
+            DismissEmployeeCommand = new AsyncRelayCommand(DismissEmployee, CanEditDismissEmployee);
             RefreshEmployeesCommand = new RelayCommand(RefreshEmployees);
             ConnectionSettingsCommand = new RelayCommand(SetConnectionSettings);
-            LogOnCommand = new RelayCommand(LogOn);
             LoadedWindowCommand = new RelayCommand(LoadedWindow);
+            LogOnCommand = new RelayCommand(LogOn);
 
+            //var logOnWindow = new LogOnView(false);
+            //logOnWindow.ShowDialog();
             //LoadedWindow(null);
-            var logOnWindow = new LogOnView(false);
-            logOnWindow.ShowDialog();
-
-            InitEmployees();
-            InitStatuses();
         }
 
         public ICommand AddEmployeeCommand { get; set; }
@@ -94,11 +91,28 @@ namespace Homework_7_2.ViewModels
 
         private void AddEditEmployee(object obj)
         {
-            MessageBox.Show("Dodaj/Edytuj");
+            var addEditEmployeeWindow = new AddEditEmployeeView();
+            addEditEmployeeWindow.Closed += AddEditEmployeeWindow_Closed;
+            addEditEmployeeWindow.ShowDialog();
         }
-        private void DismissEmployee(object obj)
+
+        private void AddEditEmployeeWindow_Closed(object sender, EventArgs e)
         {
-            MessageBox.Show("Zwolnij");
+            Refresh();
+        }
+
+        private async Task DismissEmployee(object obj)
+        {
+            var metroWindow = Application.Current.MainWindow as MetroWindow;
+            var dialog = await metroWindow.ShowMessageAsync(
+                "Zwalnianie pracownika",
+                $"Czy na pewno chcesz zwolnić pracownika {SelectedEmployee.FirstName} {SelectedEmployee.LastName}?",
+                MessageDialogStyle.AffirmativeAndNegative);
+
+            if (dialog != MessageDialogResult.Affirmative)
+                return;
+
+            //odpowiendnia modyfikacja w bazie danych
         }
         private bool CanEditDismissEmployee(object obj)
         {
@@ -106,26 +120,90 @@ namespace Homework_7_2.ViewModels
         }
         private void RefreshEmployees(object obj)
         {
-            MessageBox.Show("Odśwież");
+            Refresh();
         }
         private void SetConnectionSettings(object obj)
         {
-            MessageBox.Show("Ustawienia");
-        }
-        private void LogOn(object obj)
-        {
-            var logOnWindow = new LogOnView(true); //Nie jest to dobra praktyka, stosuje się mechanizm DEPENDENCY INJECTION
-            logOnWindow.Closed += LogOnWindow_Closed;
-            logOnWindow.ShowDialog();
+            var setConnectionSettingsWindow = new ConnectionSettingsView(true);
+            setConnectionSettingsWindow.Closed += SetConnectionSettingsWindow_Closed;
+            setConnectionSettingsWindow.ShowDialog();
         }
 
-        private void LogOnWindow_Closed(object sender, EventArgs e)
+        private void SetConnectionSettingsWindow_Closed(object sender, EventArgs e)
         {
-            MessageBox.Show("Zaloguj");
+            Refresh();
         }
 
-        private void LoadedWindow(object obj)
+        private async void LogOn(object obj)
         {
+            var metroWindow = Application.Current.MainWindow as MetroWindow;
+            var dialog = await metroWindow.ShowMessageAsync(
+                "Wylogowanie z konta",
+                $"Czy aby na pewno chcesz zotać wylogowany z obecnego konta?",
+                MessageDialogStyle.AffirmativeAndNegative);
+
+            if (dialog == MessageDialogResult.Affirmative)
+                RestartApplication();
+        }
+
+        private void RestartApplication()
+        {
+            Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
+        }
+
+        private async void LoadedWindow(object obj)
+        {
+            //OK
+            //var logOnWindow = new LogOnView(false);
+            //logOnWindow.ShowDialog();
+
+            if (false)
+            {
+                var metroWindow = Application.Current.MainWindow as MetroWindow;
+                var dialog = await metroWindow.ShowMessageAsync(
+                    "Błąd połączenia",
+                    $"Nie można połączyć się z bazą danych. Czy chcesz zmienić ustawienia?",
+                    MessageDialogStyle.AffirmativeAndNegative);
+
+                if (dialog != MessageDialogResult.Affirmative)
+                {
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    var setConnectionStringWindow = new ConnectionSettingsView(false);
+                    setConnectionStringWindow.ShowDialog();
+                }
+            }
+            else
+            {
+                Refresh();
+                InitEmployees();
+                InitStatuses();
+            }
+        }
+
+        private void Refresh()
+        {
+            MessageBox.Show("Odśwież - do zaimplementowania");
+        }
+
+        public bool IsDatabaseConnectionPossible()
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    context.Database.Connection.Open();
+                    context.Database.Connection.Close();
+                }
+                return true;
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
+                return false;
+            }
         }
 
         private void InitEmployees()
@@ -140,6 +218,7 @@ namespace Homework_7_2.ViewModels
 
         private void InitStatuses()
         {
+
             Status = new ObservableCollection<StatusWrapper>()
             {
                 new StatusWrapper() { Id = 0, Name = "Wszyscy" },

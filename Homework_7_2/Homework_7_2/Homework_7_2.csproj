@@ -105,6 +105,7 @@
     <Compile Include="Models\Converters\LogOnParamsConverter.cs" />
     <Compile Include="Models\LogOnParams.cs" />
     <Compile Include="Models\UserCredentials.cs" />
+    <Compile Include="Models\UserSettings.cs" />
     <Compile Include="Models\Wrappers\EmployeeWrapper.cs" />
     <Compile Include="Models\Wrappers\StatusWrapper.cs" />
     <Compile Include="ViewModels\AddEditEmployeeViewModel.cs" />

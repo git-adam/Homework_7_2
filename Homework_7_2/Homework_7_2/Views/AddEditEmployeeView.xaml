@@ -6,8 +6,19 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:Homework_7_2.Views"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Name="AddEditEmployeeWindow"      
+        ResizeMode="NoResize"
         Title="AddEditEmployeeView" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         
     </Grid>
 </mah:MetroWindow>

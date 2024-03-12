@@ -20,7 +20,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
-            <i:InvokeCommandAction Command="{Binding ClosedWindowCommand}" />
+            <i:InvokeCommandAction Command="{Binding ClosedWindowEventCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 

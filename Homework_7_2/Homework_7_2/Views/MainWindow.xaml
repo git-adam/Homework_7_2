@@ -9,40 +9,39 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Kadry" Height="580" Width="940">
-        
+
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedWindowCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <Button Command="{Binding AddEmployeeCommand}" Content="Dodaj" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding EditEmployeeCommand}" Content="Edytuj" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding DismissEmployeeCommand}" Content="Zwolnij" Width="100" Height="35" Margin="5"/>
-
             <ComboBox ItemsSource="{Binding Status}" SelectedValue="{Binding SelectedStatusId}" DisplayMemberPath="Name" SelectedValuePath="Id"  Width="150" Height="35" Margin="5"/>
-            
-            <Button Command="{Binding RefreshEmployeesCommand}" Content="Odśwież" Width="100" Height="35" Margin="5"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding RefreshEmployeesCommand}" Content="Odśwież" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding ConnectionSettingsCommand}" Content="Ustawienia" Width="100" Height="35" Margin="5"/>
-            <Button Command="{Binding LogOnCommand}" Content="Zaloguj/wyloguj" Width="120" Height="35" Margin="5" HorizontalAlignment="Right"/>
-            <Button Width="50" Height="35" Margin="5">
+            <Button Command="{Binding LogOnCommand}" Width="40" Height="35" Margin="5">
                 <Button.Content>
-                    <StackPanel Orientation="Horizontal" >
-                        <!--<Label Content="LOG OUT" />-->
-                        <!--<Image Width="25" Source="https://wp.scoopwhoop.com/wp-content/uploads/2016/04/57206fe3fb77854982571985_583926332.jpg" />-->
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="25" Source="https://wp.scoopwhoop.com/wp-content/uploads/2016/04/57206fe3fb77854982571985_583926332.jpg" />
                     </StackPanel>
                 </Button.Content>
             </Button>
         </StackPanel>
+        
         <DataGrid
             Grid.Row="1"
             Margin="5"
@@ -66,5 +65,5 @@
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
-        
+
 </mah:MetroWindow>
