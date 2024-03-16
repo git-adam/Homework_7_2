@@ -29,15 +29,9 @@ namespace Homework_7_2.ViewModels
             ConnectionSettingsCommand = new RelayCommand(SetConnectionSettings);
             LoadedWindowCommand = new RelayCommand(LoadedWindow);
             LogOnCommand = new RelayCommand(LogOn);
-
             //SelectionChangedCommand = new RelayCommand(SelectionChanged);
-            //LoadedWindow(null);
-            //_repository.DeleteEmployees();
-        }
 
-        private void SelectionChanged(object obj)
-        {
-            Refresh();
+            //LoadedWindow(null);
         }
 
         public ICommand AddEmployeeCommand { get; set; }
@@ -229,17 +223,6 @@ namespace Homework_7_2.ViewModels
                 return false;
             }
         }
-
-        private void InitEmployees()
-        {
-            Employees = new ObservableCollection<EmployeeWrapper>()
-            {
-                new EmployeeWrapper() {FirstName = "A", Bonus = true, Salary = 2},
-                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1 } },
-                new EmployeeWrapper() {FirstName = "C"},
-            };
-        }
-
         private void InitStatuses()
         {
             var statuses = _repository
@@ -251,6 +234,36 @@ namespace Homework_7_2.ViewModels
 
             Statuses = new ObservableCollection<StatusWrapper>(statuses);
             SelectedStatusId = 0;
+        }
+
+        private void InitEmployees()
+        {
+            Employees = new ObservableCollection<EmployeeWrapper>()
+            {
+                new EmployeeWrapper() {FirstName = "A", Bonus = true, Salary = 2},
+                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1 } },
+                new EmployeeWrapper() {FirstName = "C"},
+            };
+        }
+
+        private void SelectionChanged(object obj)
+        {
+            Refresh();
+        }
+
+        private void InsertRecordToStatusesTable(int id, string name)
+        {
+            var newStatus = new StatusWrapper();
+            newStatus.Id = id;
+            newStatus.Name = name;
+            _repository.AddRecordToStatusesTable(newStatus);
+        }
+
+        private void InitDefaultStatusesInDatabase()
+        {
+            var names = new string[] {"Urlop wypoczynkowy", "Urlop zdrowotny", "Delegacja", "Zwolniony", "Dostępny"};
+            for (int i = 1; i <= names.Length; i++)
+                InsertRecordToStatusesTable(i, names[i - 1]);
         }
     }
 }

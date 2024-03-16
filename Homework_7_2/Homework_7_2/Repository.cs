@@ -131,5 +131,16 @@ namespace Homework_7_2
             }
         }
 
+        public void AddRecordToStatusesTable(StatusWrapper statusWrapper)
+        {
+            var status = statusWrapper.ToDao();
+
+            using (var context = new ApplicationDbContext())
+            {
+                context.Statuses.Add(status);
+                context.SaveChanges();
+            }
+        }
+
     }
 }
