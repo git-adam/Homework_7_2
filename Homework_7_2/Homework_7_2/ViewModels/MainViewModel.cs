@@ -1,4 +1,6 @@
 ﻿using Homework_7_2.Commands;
+using Homework_7_2.Models.Converters;
+using Homework_7_2.Models.Domains;
 using Homework_7_2.Models.Wrappers;
 using Homework_7_2.Views;
 using MahApps.Metro.Controls;
@@ -17,19 +19,25 @@ namespace Homework_7_2.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        private Repository _repository = new Repository();
         public MainViewModel()
         {
             AddEmployeeCommand = new RelayCommand(AddEditEmployee);
-            EditEmployeeCommand = new RelayCommand(AddEditEmployee, CanEditDismissEmployee);
-            DismissEmployeeCommand = new AsyncRelayCommand(DismissEmployee, CanEditDismissEmployee);
+            EditEmployeeCommand = new RelayCommand(AddEditEmployee, CanEditEmployee);
+            DismissEmployeeCommand = new AsyncRelayCommand(DismissEmployee, CanDismissEmployee);
             RefreshEmployeesCommand = new RelayCommand(RefreshEmployees);
             ConnectionSettingsCommand = new RelayCommand(SetConnectionSettings);
             LoadedWindowCommand = new RelayCommand(LoadedWindow);
             LogOnCommand = new RelayCommand(LogOn);
 
-            //var logOnWindow = new LogOnView(false);
-            //logOnWindow.ShowDialog();
+            //SelectionChangedCommand = new RelayCommand(SelectionChanged);
             //LoadedWindow(null);
+            //_repository.DeleteEmployees();
+        }
+
+        private void SelectionChanged(object obj)
+        {
+            Refresh();
         }
 
         public ICommand AddEmployeeCommand { get; set; }
@@ -39,7 +47,9 @@ namespace Homework_7_2.ViewModels
         public ICommand ConnectionSettingsCommand { get; set; }
         public ICommand LogOnCommand { get; set; }
         public ICommand LoadedWindowCommand { get; set; }
-       
+
+        public ICommand SelectionChangedCommand { get; set; }
+
 
         private EmployeeWrapper _selectedEmployee;
 
@@ -72,28 +82,35 @@ namespace Homework_7_2.ViewModels
             get { return _selectedStatusId; }
             set
             {
+                var old = _selectedStatusId;
+
                 _selectedStatusId = value;
+
                 OnPropertyChanged();
+
+                if (_selectedStatusId != old)
+                    Refresh();
             }
         }
 
-        private ObservableCollection<StatusWrapper> _status;
+        private ObservableCollection<StatusWrapper> _statuses;
 
-        public ObservableCollection<StatusWrapper> Status
+        public ObservableCollection<StatusWrapper> Statuses
         {
-            get { return _status; }
+            get { return _statuses; }
             set 
-            { 
-                _status = value;
+            {
+                _statuses = value;
                 OnPropertyChanged();
             }
         }
 
         private void AddEditEmployee(object obj)
         {
-            var addEditEmployeeWindow = new AddEditEmployeeView();
+            var addEditEmployeeWindow = new AddEditEmployeeView(obj as EmployeeWrapper);
             addEditEmployeeWindow.Closed += AddEditEmployeeWindow_Closed;
             addEditEmployeeWindow.ShowDialog();
+
         }
 
         private void AddEditEmployeeWindow_Closed(object sender, EventArgs e)
@@ -112,12 +129,20 @@ namespace Homework_7_2.ViewModels
             if (dialog != MessageDialogResult.Affirmative)
                 return;
 
-            //odpowiendnia modyfikacja w bazie danych
+            _repository.DismissEmployee(SelectedEmployee.Id);
+
+            Refresh();
         }
-        private bool CanEditDismissEmployee(object obj)
+        private bool CanEditEmployee(object obj)
         {
             return SelectedEmployee != null;
         }
+
+        private bool CanDismissEmployee(object obj)
+        {
+            return SelectedEmployee != null && SelectedEmployee.DismissDate == null;
+        }
+
         private void RefreshEmployees(object obj)
         {
             Refresh();
@@ -154,11 +179,10 @@ namespace Homework_7_2.ViewModels
 
         private async void LoadedWindow(object obj)
         {
-            //OK
-            //var logOnWindow = new LogOnView(false);
-            //logOnWindow.ShowDialog();
+            var logOnWindow = new LogOnView(false);
+            logOnWindow.ShowDialog();
 
-            if (false)
+            if (!IsDatabaseConnectionPossible())
             {
                 var metroWindow = Application.Current.MainWindow as MetroWindow;
                 var dialog = await metroWindow.ShowMessageAsync(
@@ -179,14 +203,14 @@ namespace Homework_7_2.ViewModels
             else
             {
                 Refresh();
-                InitEmployees();
+                //InitEmployees();
                 InitStatuses();
             }
         }
 
         private void Refresh()
         {
-            MessageBox.Show("Odśwież - do zaimplementowania");
+            Employees = new ObservableCollection<EmployeeWrapper>(_repository.GetEmployees(SelectedStatusId));
         }
 
         public bool IsDatabaseConnectionPossible()
@@ -210,29 +234,23 @@ namespace Homework_7_2.ViewModels
         {
             Employees = new ObservableCollection<EmployeeWrapper>()
             {
-                new EmployeeWrapper() {FirstName = "A", Bonus = true},
-                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1, Name = "Na urlopie"} },
+                new EmployeeWrapper() {FirstName = "A", Bonus = true, Salary = 2},
+                new EmployeeWrapper() {FirstName = "B", Status = new StatusWrapper(){ Id = 1 } },
                 new EmployeeWrapper() {FirstName = "C"},
             };
         }
 
         private void InitStatuses()
         {
+            var statuses = _repository
+                .GetStatuses()
+                .Select(x => x.ToWrapper())
+                .ToList();
 
-            Status = new ObservableCollection<StatusWrapper>()
-            {
-                new StatusWrapper() { Id = 0, Name = "Wszyscy" },
-                new StatusWrapper() { Id = 1, Name = "Na urlopie wyp." },
-                new StatusWrapper() { Id = 2, Name = "Na urlopie zdr." },
-                new StatusWrapper() { Id = 3, Name = "W delegacji" },
-                new StatusWrapper() { Id = 4, Name = "Zwolniony" },
-                new StatusWrapper() { Id = 5, Name = "Dostępny" },
-            };
+            statuses.Insert(0, new StatusWrapper() { Id = 0, Name = "Wszystkie statusy" });
 
+            Statuses = new ObservableCollection<StatusWrapper>(statuses);
             SelectedStatusId = 0;
         }
-
-
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Homework_7_2.Commands;
 using Homework_7_2.Models;
+using Homework_7_2.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,12 +30,14 @@ namespace Homework_7_2.ViewModels
 
         private void ClosedWindowEvent(object obj)
         {
+            Settings.Default.Reload();
             if (!_canCloseWindow)
                Application.Current.Shutdown();
         }
 
         private void Close(object obj)
         {
+            Settings.Default.Reload();
             if (_canCloseWindow)
                 CloseWindow(obj as Window);
             else

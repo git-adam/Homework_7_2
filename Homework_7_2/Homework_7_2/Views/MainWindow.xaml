@@ -5,10 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:converters="clr-namespace:Homework_7_2.Models.Converters"
         xmlns:local="clr-namespace:Homework_7_2"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Kadry" Height="580" Width="940">
+
+
+    <mah:MetroWindow.Resources>
+        <converters:StatusToBackgroundColorConverter x:Key="statusToBackgroundColorConverter"/>
+    </mah:MetroWindow.Resources>
 
 
     <i:Interaction.Triggers>
@@ -25,23 +31,35 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
             <Button Command="{Binding AddEmployeeCommand}" Content="Dodaj" Width="100" Height="35" Margin="5"/>
-            <Button Command="{Binding EditEmployeeCommand}" Content="Edytuj" Width="100" Height="35" Margin="5"/>
+            <Button Command="{Binding EditEmployeeCommand}" CommandParameter="{Binding SelectedEmployee}" Content="Edytuj" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding DismissEmployeeCommand}" Content="Zwolnij" Width="100" Height="35" Margin="5"/>
-            <ComboBox ItemsSource="{Binding Status}" SelectedValue="{Binding SelectedStatusId}" DisplayMemberPath="Name" SelectedValuePath="Id"  Width="150" Height="35" Margin="5"/>
+            <ComboBox ItemsSource="{Binding Statuses}" 
+                      SelectedValue="{Binding SelectedStatusId}"
+                      DisplayMemberPath="Name" 
+                      SelectedValuePath="Id" 
+                      Width="200" 
+                      Height="35" 
+                      Margin="5">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Command="{Binding RefreshEmployeesCommand}" Content="Odśwież" Width="100" Height="35" Margin="5"/>
+            <Button Command="{Binding RefreshEmployeesCommand}" Content="Odśwież" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding ConnectionSettingsCommand}" Content="Ustawienia" Width="100" Height="35" Margin="5"/>
             <Button Command="{Binding LogOnCommand}" Width="40" Height="35" Margin="5">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="25" Source="https://wp.scoopwhoop.com/wp-content/uploads/2016/04/57206fe3fb77854982571985_583926332.jpg" />
+                        <Image Width="25" Source="/Homework_7_2;component/Photos/log_out_logo.jpg" />
                     </StackPanel>
                 </Button.Content>
             </Button>
         </StackPanel>
-        
+
         <DataGrid
             Grid.Row="1"
             Margin="5"
@@ -51,6 +69,19 @@
             IsReadOnly="True"
             SelectionMode="Single"
             AutoGenerateColumns="False">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding Status.Id, Converter={StaticResource statusToBackgroundColorConverter}}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FF00589F" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FFAAAAAA" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Id}" Header="Identyfikator" Visibility="Hidden"/>
                 <DataGridTextColumn Binding="{Binding FirstName}" Header="Imię"/>
@@ -60,8 +91,8 @@
                 <DataGridTextColumn Binding="{Binding DismissDate}" Header="Data zwolnienia"/>
                 <DataGridTextColumn Binding="{Binding Salary}" Header="Wypłata"/>
                 <DataGridCheckBoxColumn Binding="{Binding Bonus}" Header="Premia"/>
-                <DataGridTextColumn Binding="{Binding Status.Name}" Header="Status"/>
                 <DataGridTextColumn Binding="{Binding Comments}" Header="Uwagi"/>
+                <DataGridTextColumn Binding="{Binding Status.Name}" Header="Status"/>                
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

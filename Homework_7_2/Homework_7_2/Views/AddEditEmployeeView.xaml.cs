@@ -1,4 +1,5 @@
-﻿using Homework_7_2.ViewModels;
+﻿using Homework_7_2.Models.Wrappers;
+using Homework_7_2.ViewModels;
 using MahApps.Metro.Controls;
 
 namespace Homework_7_2.Views
@@ -8,10 +9,10 @@ namespace Homework_7_2.Views
     /// </summary>
     public partial class AddEditEmployeeView : MetroWindow
     {
-        public AddEditEmployeeView()
+        public AddEditEmployeeView(EmployeeWrapper employee = null)
         {
             InitializeComponent();
-            DataContext = new AddEditEmployeeViewModel();
+            DataContext = new AddEditEmployeeViewModel(employee);
         }
     }
 }

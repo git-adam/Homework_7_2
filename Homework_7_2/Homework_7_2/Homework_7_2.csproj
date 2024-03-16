@@ -102,12 +102,26 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Migrations\202403142143385_InitialCreate.cs" />
+    <Compile Include="Migrations\202403142143385_InitialCreate.designer.cs">
+      <DependentUpon>202403142143385_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
+    <Compile Include="Models\Configurations\StatusConfiguration.cs" />
+    <Compile Include="Models\Converters\InvertBooleanConverter.cs" />
+    <Compile Include="Models\Converters\EmployeeConverter.cs" />
     <Compile Include="Models\Converters\LogOnParamsConverter.cs" />
+    <Compile Include="Models\Converters\StatusConverter.cs" />
+    <Compile Include="Models\Converters\StatusToBackgroundColorConverter.cs" />
+    <Compile Include="Models\Domains\Employee.cs" />
+    <Compile Include="Models\Domains\Status.cs" />
     <Compile Include="Models\LogOnParams.cs" />
     <Compile Include="Models\UserCredentials.cs" />
     <Compile Include="Models\UserSettings.cs" />
     <Compile Include="Models\Wrappers\EmployeeWrapper.cs" />
     <Compile Include="Models\Wrappers\StatusWrapper.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="ViewModels\AddEditEmployeeViewModel.cs" />
     <Compile Include="ViewModels\ConnectionSettingsViewModel.cs" />
     <Compile Include="ViewModels\LogOnViewModel.cs" />
@@ -141,6 +155,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202403142143385_InitialCreate.resx">
+      <DependentUpon>202403142143385_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -155,10 +172,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Domains\" />
+    <Folder Include="DbScripts\" />
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Photos\loading.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Photos\log_out_logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
