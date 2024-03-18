@@ -158,7 +158,7 @@ namespace Homework_7_2.ViewModels
             var metroWindow = Application.Current.MainWindow as MetroWindow;
             var dialog = await metroWindow.ShowMessageAsync(
                 "Wylogowanie z konta",
-                $"Czy aby na pewno chcesz zotać wylogowany z obecnego konta?",
+                $"Czy aby na pewno chcesz zostać wylogowany z obecnego konta?",
                 MessageDialogStyle.AffirmativeAndNegative);
 
             if (dialog == MessageDialogResult.Affirmative)
